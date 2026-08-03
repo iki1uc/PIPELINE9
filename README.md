@@ -28,3 +28,46 @@
 - 756 — Last
 - PIPELINE9 — Prüfung
 - QI/IQQ — Korrektur
+# GEO-Strichsystem · PIPELINE9
+
+--- Ursache ---
+3  | Startpunkt
+QI | Öffner
+9  | Aggregatpunkt
+
+--- Wirkung ---
+IQQ | Schließer
+81  | Aggregatraum
+PIPELINE9 | Prüfer
+
+--- Plan ---
+756-Wurzel → 27 → 81.tmp
+QI → REL/RDY/FAL/MISS (vor 9)
+IQQ → REL/RDY/FAL/MISS (nach 9)
+PIPELINE9 → Systemtreue
+
+--- Striche ---
+3 — QI — 9 — IQQ — 81 — PIPELINE9 — 756
+# GEO · Ursache → Wirkung · Pipeline 9
+
+## Ursache
+- 3 = Nullpunkt
+- QI = 3→9
+- 756-Wurzel = Startlast
+- pos-3 = Achse
+
+## Wirkung
+- 9 = Aggregatpunkt
+- IQQ = 9→81
+- 81.tmp = Raum
+- pos-4 = Achse
+
+## Pipeline 9
+- REL = Relevanz
+- RDY = Bereitschaft
+- FAL = Fehler
+- MISS = Fehlende Daten
+- prüft alle 756 Werte
+
+## GEO-Plan
+3 → QI → 9 → IQQ → 81 → PIPELINE9 → 3
