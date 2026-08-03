@@ -1,0 +1,23 @@
+┌─────────────── Ursache ────────────────┐
+│ 3 → QI → 9                              │
+│ Ursprung   Öffnung   Aggregatpunkt      │
+└─────────────────────────────────────────┘
+
+┌────────────── Wirkung ─────────────────┐
+│ 9 → IQQ → 81                            │
+│ Aggregatpunkt   Schließung   Raum       │
+└─────────────────────────────────────────┘
+
+┌────────────── Prüfung ─────────────────┐
+│ PIPELINE9 → REL / RDY / FAL / MISS      │
+│ 756 → 27 → 81.tmp                        │
+│ Wurzel   Funktion   Tiefenachse          │
+└─────────────────────────────────────────┘
+
+┌────────────── Rückführung ─────────────┐
+│ 81.tmp → 3                               │
+│ Raum → Ursprung                           │
+└─────────────────────────────────────────┘
+
+GEO‑MOVE‑VECTOR:
+3 — QI — 9 — IQQ — 81 — PIPELINE9 — 756 — 27 — 81.tmp — 3
