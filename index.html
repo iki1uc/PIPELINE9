@@ -118,3 +118,41 @@ Systemtreue: 100%.
 
 </body>
 </html>
+<script>
+// GEN-FLOW-CONTROLLER
+const GEN = {
+    step: "3",
+    coverage: 42,
+
+    update() {
+        this.step = this.nextStep(this.step);
+        this.coverage = this.calcCoverage();
+        this.updateUI();
+    },
+
+    nextStep(step) {
+        const seq = ["3","QI","9","IQQ","81","PIPELINE9","756","27","81.tmp","3"];
+        const idx = seq.indexOf(step);
+        return seq[(idx + 1) % seq.length];
+    },
+
+    calcCoverage() {
+        return 42 + Math.sin(Date.now()/1000)*5;
+    },
+
+    updateUI() {
+        const status = document.getElementById("gen-status");
+        if (status) {
+            status.textContent = `🔄 Kohärenz: ${this.coverage.toFixed(1)}%`;
+        }
+
+        const nodes = document.querySelectorAll("#gen-cycle .node");
+        nodes.forEach(n => n.classList.remove("active"));
+
+        const active = [...nodes].find(n => n.textContent === this.step);
+        if (active) active.classList.add("active");
+    }
+};
+
+setInterval(() => GEN.update(), 500);
+</script>
