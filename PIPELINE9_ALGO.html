@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- EVO-GEOLEGAL -->
+    <meta name="author" content="iki1uc (Ridvan)">
+    <meta name="license" content="MIT - Nutzung erlaubt. Logik-Reproduktion verboten.">
+
+    <title>🌀 PIPELINE9 · ALGORITHMISCHE ENGINE · NC-6D · P21-EVO</title>
+
+    <style>
+        body {
+            background: #0a0a0f;
+            color: #0f0;
+            font-family: 'Consolas', monospace;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 100vh;
+        }
+
+        header {
+            border: 2px solid #ffd700;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            background: rgba(255, 215, 0, 0.05);
+        }
+        header h1 {
+            font-size: 22px;
+            background: linear-gradient(90deg, #ffd700, #b8a9ff, #6bcfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 4px;
+            margin: 0;
+        }
+        header p {
+            font-size: 10px;
+            color: #888;
+            margin: 5px 0 0 0;
+            letter-spacing: 2px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .panel {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .panel h2 {
+            font-size: 14px;
+            color: #ffd700;
+            margin: 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
+        }
+
+        .cmd-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .cmd {
+            background: #0a0a0f;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            flex: 1;
+            min-width: 50px;
+            transition: 0.3s;
+        }
+        .cmd.active {
+            border-color: #ff6b8a;
+            box-shadow: 0 0 15px rgba(255,107,138,0.3);
+            color: #ff6b8a;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #888;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 4px;
+        }
+        .stat-row b { color: #0f0; }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            font-size: 10px;
+        }
+        th, td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid #222;
+        }
+        th {
+            background: #1a1a1a;
+            color: #ffd700;
+        }
+
+        .log {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 10px;
+            color: #888;
+            height: 150px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        button {
+            background: #1a1a2a;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+        }
+        button:hover { border-color: #ffd700; color: #ffd700; }
+
+        footer {
+            text-align: center;
+            color: #333;
+            font-size: 9px;
+            padding-top: 8px;
+            border-top: 1px solid #222;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🌀 PIPELINE9 · ALGORITHMISCHE ENGINE</h1>
+    <p>NC-6D · Stationen · P21-EARN · EVO-REV/UPD/UPG · GEN-FLOW</p>
+</header>
+
+<!-- 6D Befehlskette -->
+<div class="panel">
+    <h2>6D Befehlskette</h2>
+    <div class="cmd-bar">
+        <div class="cmd" data-cmd="X">X</div>
+        <div class="cmd" data-cmd="Y">Y</div>
+        <div class="cmd" data-cmd="Z">Z</div>
+        <div class="cmd" data-cmd="T">T</div>
+        <div class="cmd" data-cmd="U">U</div>
+        <div class="cmd" data-cmd="V">V</div>
+    </div>
+</div>
+
+<!-- Stationen -->
+<div class="panel">
+    <h2>Stationen</h2>
+    <div class="cmd-bar">
+        <div class="cmd" data-station="STAGE">🎭</div>
+        <div class="cmd" data-station="PIPE12">📐</div>
+        <div class="cmd" data-station="BOERSE">📈</div>
+        <div class="cmd" data-station="MARKT">🏭</div>
+        <div class="cmd" data-station="INDUSTRY">⚙️</div>
+        <div class="cmd" data-station="EVO">🧬</div>
+    </div>
+</div>
+
+<!-- P21 EARN + EVO Status -->
+<div class="grid-3">
+    <div class="panel">
+        <h2>P21 EARN</h2>
+        <div class="stat-row"><span>Earn:</span> <b id="earnVal">0.00</b></div>
+        <div class="stat-row"><span>Station:</span> <b id="stationVal">STAGE</b></div>
+        <div class="stat-row"><span>Pipeline:</span> <b>P21</b></div>
+    </div>
+    <div class="panel">
+        <h2>EVO · REV</h2>
+        <div class="stat-row"><span>Score:</span> <b id="revScore">0</b></div>
+        <div class="stat-row"><span>Runs:</span> <b id="revRuns">0</b></div>
+        <div class="stat-row"><span>State:</span> <b id="revState">IDLE</b></div>
+    </div>
+    <div class="panel">
+        <h2>EVO · UPD</h2>
+        <div class="stat-row"><span>Changes:</span> <b id="updChanges">0</b></div>
+        <div class="stat-row"><span>Level:</span> <b id="updLevel">0</b></div>
+        <div class="stat-row"><span>State:</span> <b id="updState">IDLE</b></div>
+    </div>
+</div>
+
+<div class="grid-3">
+    <div class="panel">
+        <h2>EVO · UPG</h2>
+        <div class="stat-row"><span>Upgrades:</span> <b id="upgCount">0</b></div>
+        <div class="stat-row"><span>Level:</span> <b id="upgLevel">0</b></div>
+        <div class="stat-row"><span>State:</span> <b id="upgState">IDLE</b></div>
+    </div>
+    <div class="panel">
+        <h2>GEN-Flow</h2>
+        <div class="stat-row"><span>Step:</span> <b id="genStep">3</b></div>
+        <div class="stat-row"><span>Coverage:</span> <b id="genCoverage">0%</b></div>
+        <div class="stat-row"><span>Kohärenz:</span> <b id="genStatus">ONLINE</b></div>
+    </div>
+    <div class="panel">
+        <h2>NEWADA</h2>
+        <div class="stat-row"><span>Status:</span> <b id="newadaState">IDLE</b></div>
+        <div class="stat-row"><span>Orbit:</span> <b id="newadaOrbit">PASSIV</b></div>
+    </div>
+</div>
+
+<!-- Tabelle -->
+<div class="panel">
+    <h2>Pipeline-Tabelle</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ebene</th>
+                <th>Status</th>
+                <th>Wert</th>
+                <th>Nächster Schritt</th>
+            </tr>
+        </thead>
+        <tbody id="evo-tbl"></tbody>
+    </table>
+</div>
+
+<!-- Buttons & Log -->
+<div class="panel">
+    <h2>Steuerung</h2>
+    <div class="cmd-bar">
+        <button onclick="runP21()">🌀 P21 EARN</button>
+        <button onclick="runRev()">🔮 REV</button>
+        <button onclick="runUpd()">🔄 UPD</button>
+        <button onclick="runUpg()">🚀 UPG</button>
+        <button onclick="runNewada()">✨ NEWADA</button>
+        <button onclick="startGen()">⚡ GEN-FLOW</button>
+        <button onclick="resetAll()">⟲ RESET</button>
+    </div>
+    <div class="log" id="log">[init] Algorithmische PIPELINE9 bereit.</div>
+</div>
+
+<footer>⚖️ EVO-GEOLEGAL · iki1uc © · Code nutzbar, Logik unkopierbar.</footer>
+
+<script>
+// ============================================================
+// PIPELINE9 · Algorithmische Engine
+// ============================================================
+
+// 1. Konstanten
+const COMMANDS = {
+    X: "LINKS", Y: "RECHTS", Z: "TIEFE",
+    T: "ZEIT", U: "ORBIT", V: "VIRTUAL"
+};
+
+const STATIONS = ["STAGE", "PIPE12", "BOERSE", "MARKT", "INDUSTRY", "EVO"];
+
+// 2. State
+const state = {
+    cmd: "X",
+    station: "STAGE",
+    p21: { earn: 0, station: "STAGE" },
+    evo: {
+        rev: { score: 0, runs: 0, state: "IDLE" },
+        upd: { changes: 0, level: 0, state: "IDLE" },
+        upg: { count: 0, level: 0, state: "IDLE" }
+    },
+    gen: { step: "3", coverage: 0 },
+    newada: { state: "IDLE", orbit: "PASSIV" }
+};
+
+// 3. Log
+function log(msg, type = "info") {
+    const el = document.getElementById("log");
+    const e = document.createElement("div");
+    e.textContent = msg;
+    el.appendChild(e);
+    el.scrollTop = el.scrollHeight;
+}
+
+// 4. UI Update
+function updateUI() {
+    // P21
+    document.getElementById("earnVal").textContent = state.p21.earn.toFixed(2);
+    document.getElementById("stationVal").textContent = state.p21.station;
+
+    // EVO
+    document.getElementById("revScore").textContent = state.evo.rev.score;
+    document.getElementById("revRuns").textContent = state.evo.rev.runs;
+    document.getElementById("revState").textContent = state.evo.rev.state;
+
+    document.getElementById("updChanges").textContent = state.evo.upd.changes;
+    document.getElementById("updLevel").textContent = state.evo.upd.level;
+    document.getElementById("updState").textContent = state.evo.upd.state;
+
+    document.getElementById("upgCount").textContent = state.evo.upg.count;
+    document.getElementById("upgLevel").textContent = state.evo.upg.level;
+    document.getElementById("upgState").textContent = state.evo.upg.state;
+
+    // GEN
+    document.getElementById("genStep").textContent = state.gen.step;
+    document.getElementById("genCoverage").textContent = state.gen.coverage.toFixed(1) + "%";
+    document.getElementById("genStatus").textContent = "ONLINE";
+
+    // NEWADA
+    document.getElementById("newadaState").textContent = state.newada.state;
+    document.getElementById("newadaOrbit").textContent = state.newada.orbit;
+
+    // Table
+    renderTable();
+}
+
+// 5. Table
+function renderTable() {
+    const body = document.getElementById("evo-tbl");
+    body.innerHTML = "";
+    [
+        { name: "P21", state: "AKTIV", value: state.p21.earn.toFixed(2), next: "Earn" },
+        { name: "REV", state: state.evo.rev.state, value: state.evo.rev.score, next: "Review" },
+        { name: "UPD", state: state.evo.upd.state, value: state.evo.upd.changes, next: "Update" },
+        { name: "UPG", state: state.evo.upg.state, value: state.evo.upg.count, next: "Upgrade" },
+        { name: "GEN", state: "ONLINE", value: state.gen.coverage.toFixed(1) + "%", next: "Flow" },
+        { name: "NEWADA", state: state.newada.state, value: "∞", next: "Emergent" }
+    ].forEach(e => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${e.name}</td><td>${e.state}</td><td>${e.value}</td><td>${e.next}</td>`;
+        body.appendChild(tr);
+    });
+}
+
+// 6. P21 (EARN)
+function runP21() {
+    const hoehe = 3;
+    const bewertung = 5;
+    const evoBonus = (state.evo.rev.score / 100) * (1 + state.evo.upd.changes / 50) * (1 + state.evo.upg.level / 10);
+    state.p21.earn = (hoehe + bewertung) * evoBonus * 1.25;
+    state.p21.station = state.station;
+    log(`🌀 P21 EARN: ${state.p21.earn.toFixed(2)} · Station: ${state.station}`);
+}
+
+// 7. REV
+function runRev() {
+    state.evo.rev.runs++;
+    state.evo.rev.score = Math.floor((state.evo.rev.score + Math.random() * 20 + 80) / 2);
+    state.evo.rev.state = state.evo.rev.score > 70 ? "POSITIV" : "NEGATIV";
+    log(`🔮 REV: ${state.evo.rev.state} · Score ${state.evo.rev.score}`);
+}
+
+// 8. UPD
+function runUpd() {
+    state.evo.upd.changes++;
+    state.evo.upd.level = Math.floor(state.evo.upd.changes / 10);
+    state.evo.upd.state = state.evo.upd.changes % 2 === 0 ? "AKTIV" : "PAUSE";
+    log(`🔄 UPD: ${state.evo.upd.changes} Änderungen · Level ${state.evo.upd.level}`);
+}
+
+// 9. UPG
+function runUpg() {
+    state.evo.upg.count++;
+    state.evo.upg.level = Math.floor(state.evo.upg.count / 3);
+    state.evo.upg.state = state.evo.upg.count > 10 ? "ERWEITERT" : "STANDARD";
+    log(`🚀 UPG: ${state.evo.upg.count} Upgrades · Level ${state.evo.upg.level}`);
+}
+
+// 10. GEN-FLOW
+const GEN_SEQ = ["3", "QI", "9", "IQQ", "81", "PIPELINE9", "756", "27", "81.tmp", "3"];
+function startGen() {
+    setInterval(() => {
+        const idx = GEN_SEQ.indexOf(state.gen.step);
+        state.gen.step = GEN_SEQ[(idx + 1) % GEN_SEQ.length];
+        state.gen.coverage = 42 + Math.sin(Date.now() / 1000) * 5;
+        updateUI();
+    }, 500);
+}
+
+// 11. NEWADA
+function runNewada() {
+    if (state.evo.rev.score > 50 && state.evo.upd.changes > 10 && state.evo.upg.count > 5) {
+        state.newada.state = "AKTIV";
+        state.newada.orbit = "LIVE";
+    } else {
+        state.newada.state = "IDLE";
+        state.newada.orbit = "PASSIV";
+    }
+    log(`✨ NEWADA: ${state.newada.state} · Orbit ${state.newada.orbit}`);
+}
+
+// 12. Reset
+function resetAll() {
+    state.p21.earn = 0;
+    state.evo.rev = { score: 0, runs: 0, state: "IDLE" };
+    state.evo.upd = { changes: 0, level: 0, state: "IDLE" };
+    state.evo.upg = { count: 0, level: 0, state: "IDLE" };
+    state.newada = { state: "IDLE", orbit: "PASSIV" };
+    log("⟲ System zurückgesetzt.");
+    updateUI();
+}
+
+// 13. Init
+document.querySelectorAll('.cmd[data-cmd]').forEach(c => {
+    c.addEventListener('click', () => {
+        state.cmd = c.dataset.cmd;
+        document.querySelectorAll('.cmd[data-cmd]').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        log(`⚡ 6D Befehl: ${state.cmd} = ${COMMANDS[state.cmd]}`);
+    });
+});
+
+document.querySelectorAll('.cmd[data-station]').forEach(c => {
+    c.addEventListener('click', () => {
+        state.station = c.dataset.station;
+        document.querySelectorAll('.cmd[data-station]').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        log(`🎭 Station: ${state.station}`);
+    });
+});
+
+updateUI();
+log("🌀 Algorithmische PIPELINE9 initialisiert.");
+</script>
+
+</body>
+</html>
