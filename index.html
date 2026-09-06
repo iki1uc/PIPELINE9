@@ -3,295 +3,428 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- EVO-GEOLEGAL -->
     <meta name="author" content="iki1uc (Ridvan)">
     <meta name="license" content="MIT - Nutzung erlaubt. Logik-Reproduktion verboten.">
+    <title>🌀 PIPELINE9 · Harmonie · 9 Schalter</title>
 
-    <title>🌀 PIPELINE9 · ALGORITHMISCHE MASTER-INDEX · 9 SCHALTER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: #0a0a0f;
-            color: #0f0;
-            font-family: 'Consolas', monospace;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            background: #0d0b10;
+            color: #e0d8e8;
+            font-family: 'Inter', 'Consolas', monospace;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: radial-gradient(circle at 20% 30%, rgba(255, 215, 100, 0.05) 0%, transparent 60%);
         }
 
-        header {
-            border: 2px solid #ffd700;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(0,0,0,0.2));
+        .container {
+            max-width: 1380px;
+            width: 100%;
+            background: rgba(18, 16, 24, 0.7);
+            backdrop-filter: blur(6px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 215, 100, 0.15);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            padding: 32px 36px 40px;
+            transition: all 0.4s ease;
         }
-        header h1 {
+
+        /* HEADER */
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            gap: 16px;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f6b26b, #d4a373);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 22px;
-            background: linear-gradient(90deg, #ffd700, #b8a9ff, #6bcfff);
+            color: #1c181e;
+            box-shadow: 0 0 30px rgba(244, 180, 100, 0.25);
+        }
+        h1 {
+            font-weight: 600;
+            font-size: 26px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #f6d9b0, #dbbd9a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 4px;
-            margin: 0;
+            background-clip: text;
         }
-        header p {
-            font-size: 10px;
-            color: #888;
-            margin: 5px 0 0 0;
-            letter-spacing: 2px;
+        h1 span { font-weight: 400; -webkit-text-fill-color: rgba(200, 180, 160, 0.5); font-size: 18px; }
+        .badge {
+            background: rgba(255, 215, 150, 0.08);
+            border: 1px solid rgba(255, 215, 150, 0.15);
+            border-radius: 100px;
+            padding: 6px 18px;
+            font-size: 12px;
+            color: #cbb59e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge .pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f5b87e;
+            animation: pulse-dot 2.2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
         }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
+        /* SCHALTER-GRID */
         .schalter-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 16px;
             padding: 20px;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 12px;
+            background: rgba(255, 215, 150, 0.03);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 215, 150, 0.06);
+            margin-bottom: 28px;
+            transition: border-color 0.6s;
         }
-
         .schalter {
-            background: #0a0a0f;
-            border: 1px solid #444;
-            border-radius: 10px;
-            padding: 15px;
+            background: rgba(30, 26, 36, 0.6);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 215, 150, 0.08);
+            border-radius: 20px;
+            padding: 18px 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 12px;
-            color: #aaa;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            color: #b0a8b8;
             position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         .schalter:hover {
-            border-color: #ffd700;
-            color: #ffd700;
+            border-color: rgba(255, 215, 150, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.4);
         }
         .schalter.active {
-            border-color: #ff6b8a;
-            color: #ff6b8a;
-            box-shadow: 0 0 15px rgba(255,107,138,0.3);
-            background: rgba(255,107,138,0.05);
+            border-color: #f5b87e;
+            color: #f5d9b0;
+            background: rgba(245, 184, 126, 0.08);
+            box-shadow: 0 0 30px rgba(245, 184, 126, 0.08), inset 0 0 20px rgba(245, 184, 126, 0.02);
         }
         .schalter .num {
             position: absolute;
-            top: 5px;
-            left: 8px;
-            font-size: 8px;
-            color: #555;
+            top: 8px;
+            left: 12px;
+            font-size: 10px;
+            color: rgba(200, 180, 160, 0.25);
+            font-weight: 600;
         }
         .schalter .sym {
             display: block;
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: 28px;
+            margin-bottom: 6px;
+            transition: transform 0.6s ease;
         }
-
+        .schalter.active .sym {
+            transform: scale(1.1) rotate(2deg);
+        }
+        .schalter .label {
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 0.03em;
+        }
         .schalter .desc {
-            font-size: 9px;
-            color: #666;
+            font-size: 10px;
+            color: rgba(200, 180, 160, 0.4);
             margin-top: 4px;
         }
 
-        .panel {
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        /* 3-Spalten-Layout */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
         }
-        .panel h2 {
-            font-size: 14px;
-            color: #ffd700;
-            margin: 0;
-            border-bottom: 1px solid #333;
-            padding-bottom: 6px;
+        @media (max-width: 900px) {
+            .grid-3 { grid-template-columns: 1fr; }
         }
 
+        .panel {
+            background: rgba(30, 26, 36, 0.4);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 215, 150, 0.06);
+            border-radius: 20px;
+            padding: 18px 20px;
+            transition: all 0.4s;
+        }
+        .panel h2 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #cbb59e;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 215, 150, 0.06);
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+
+        /* Algorithmus-Status */
+        #algoOutput {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #d8d0d8;
+            padding: 4px 0;
+        }
+        #algoOutput b {
+            color: #f5d9b0;
+            font-weight: 600;
+        }
+
+        /* Tabelle */
         table {
             width: 100%;
             border-collapse: collapse;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 8px;
-            overflow: hidden;
-            font-size: 10px;
+            font-size: 11px;
         }
         th, td {
-            padding: 8px 10px;
-            text-align: left;
-            border-bottom: 1px solid #222;
+            padding: 6px 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
         th {
-            background: #1a1a1a;
-            color: #ffd700;
-            letter-spacing: 1px;
+            color: #b0a0a8;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 9px;
         }
+        td:first-child { font-weight: 500; color: #c0b8c0; }
+        .status-active { color: #a8d5a0; }
+        .status-inactive { color: #605860; }
 
+        /* Log */
         .log {
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 10px 12px;
             font-size: 10px;
-            color: #888;
             height: 120px;
             overflow-y: auto;
-            line-height: 1.6;
+            line-height: 1.8;
+            color: #908898;
+            border: 1px solid rgba(255, 215, 150, 0.04);
         }
+        .log::-webkit-scrollbar { width: 3px; }
+        .log::-webkit-scrollbar-thumb { background: #4a404a; border-radius: 4px; }
 
-        button {
-            background: #1a1a2a;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-            width: 100%;
+        /* KOHÄRENZ / HERZSCHLAG */
+        .coherence-area {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 0 4px;
         }
-        button:hover {
-            border-color: #ffd700;
-            color: #ffd700;
+        .coherence-heart {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
-
-        .summary {
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
+        .heartbeat {
+            font-size: 28px;
+            color: #f5b87e;
+            animation: heartbeat 1.8s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            25% { transform: scale(1.2); opacity: 1; }
+            50% { transform: scale(0.95); opacity: 0.8; }
+            75% { transform: scale(1.1); opacity: 1; }
+        }
+        .coherence-value {
+            font-size: 18px;
+            font-weight: 500;
+            color: #e0d0c0;
+            letter-spacing: 0.02em;
+        }
+        .coherence-value small {
             font-size: 12px;
+            color: #908898;
+            font-weight: 400;
+        }
+        .coherence-step {
+            font-size: 12px;
+            color: #b0a0a0;
+            background: rgba(255, 215, 150, 0.04);
+            padding: 4px 14px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 215, 150, 0.06);
         }
 
+        /* Footer */
         footer {
             text-align: center;
-            color: #333;
-            font-size: 9px;
-            padding-top: 8px;
-            border-top: 1px solid #222;
+            color: #403840;
+            font-size: 10px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 215, 150, 0.04);
+            margin-top: 12px;
+            letter-spacing: 0.04em;
+        }
+
+        /* Responsive */
+        @media (max-width: 720px) {
+            .container { padding: 20px 16px; }
+            .schalter-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px; }
+            .schalter { padding: 14px 6px; }
+            .schalter .sym { font-size: 22px; }
+            .schalter .label { font-size: 12px; }
+            .grid-3 { gap: 16px; }
+        }
+        @media (max-width: 480px) {
+            .schalter-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px; }
+            .schalter { padding: 10px 4px; }
+            .schalter .sym { font-size: 18px; }
+            .schalter .label { font-size: 10px; }
+            .schalter .desc { display: none; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>🌀 PIPELINE9 · MASTER-INDEX</h1>
-    <p>9 algorithmische Schalter · QI/IQQ · GEO · 8→9 · Tiefe · Ordnung</p>
-</header>
+<div class="container">
 
-<!-- 9 SCHALTER -->
-<div class="schalter-grid" id="schalterGrid">
-    <div class="schalter" data-id="qi">
-        <span class="num">01</span>
-        <span class="sym">◉</span>
-        QI
-        <span class="desc">Öffnung · 3→9</span>
-    </div>
-    <div class="schalter" data-id="iqq">
-        <span class="num">02</span>
-        <span class="sym">◎</span>
-        IQQ
-        <span class="desc">Schließung · 9→81</span>
-    </div>
-    <div class="schalter" data-id="geo">
-        <span class="num">03</span>
-        <span class="sym">◆</span>
-        GEO
-        <span class="desc">Ursache → Wirkung</span>
-    </div>
-    <div class="schalter" data-id="p9">
-        <span class="num">04</span>
-        <span class="sym">▣</span>
-        P9
-        <span class="desc">Prüfung · 8→9</span>
-    </div>
-    <div class="schalter" data-id="tmp">
-        <span class="num">05</span>
-        <span class="sym">△</span>
-        81.tmp
-        <span class="desc">Tiefenachse</span>
-    </div>
-    <div class="schalter" data-id="vector">
-        <span class="num">06</span>
-        <span class="sym">↺</span>
-        VECTOR
-        <span class="desc">GEO-MOVE-Vektor</span>
-    </div>
-    <div class="schalter" data-id="module">
-        <span class="num">07</span>
-        <span class="sym">☀️</span>
-        MODULE
-        <span class="desc">LIVE-Status</span>
-    </div>
-    <div class="schalter" data-id="rel">
-        <span class="num">08</span>
-        <span class="sym">⚙️</span>
-        REL
-        <span class="desc">Status · RDY/MISS</span>
-    </div>
-    <div class="schalter" data-id="start">
-        <span class="num">09</span>
-        <span class="sym">⚡</span>
-        START
-        <span class="desc">Vollständige Aktivierung</span>
-    </div>
-</div>
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">🌀</div>
+            <h1>PIPELINE9 <span>· Harmonie</span></h1>
+        </div>
+        <div class="badge">
+            <span class="pulse"></span>
+            <span>9 Schalter · lebendig</span>
+        </div>
+    </header>
 
-<!-- AUSGABE / ALGORITHMUS -->
-<div class="grid-3">
-    <div class="panel">
-        <h2>ALGORITHMUS · AKTIV</h2>
-        <div id="algoOutput" style="font-size:11px; color:#9df; line-height:1.8;">
-            Warte auf Schalter-Aktivierung...
+    <!-- 9 SCHALTER -->
+    <div class="schalter-grid" id="schalterGrid">
+        <div class="schalter" data-id="qi">
+            <span class="num">01</span>
+            <span class="sym">◉</span>
+            <div class="label">QI</div>
+            <div class="desc">Öffnung · 3→9</div>
+        </div>
+        <div class="schalter" data-id="iqq">
+            <span class="num">02</span>
+            <span class="sym">◎</span>
+            <div class="label">IQQ</div>
+            <div class="desc">Schließung · 9→81</div>
+        </div>
+        <div class="schalter" data-id="geo">
+            <span class="num">03</span>
+            <span class="sym">◆</span>
+            <div class="label">GEO</div>
+            <div class="desc">Ursache → Wirkung</div>
+        </div>
+        <div class="schalter" data-id="p9">
+            <span class="num">04</span>
+            <span class="sym">▣</span>
+            <div class="label">P9</div>
+            <div class="desc">Prüfung · 8→9</div>
+        </div>
+        <div class="schalter" data-id="tmp">
+            <span class="num">05</span>
+            <span class="sym">△</span>
+            <div class="label">81.tmp</div>
+            <div class="desc">Tiefenachse</div>
+        </div>
+        <div class="schalter" data-id="vector">
+            <span class="num">06</span>
+            <span class="sym">↺</span>
+            <div class="label">VECTOR</div>
+            <div class="desc">GEO‑MOVE‑Vektor</div>
+        </div>
+        <div class="schalter" data-id="module">
+            <span class="num">07</span>
+            <span class="sym">☀️</span>
+            <div class="label">MODULE</div>
+            <div class="desc">LIVE‑Status</div>
+        </div>
+        <div class="schalter" data-id="rel">
+            <span class="num">08</span>
+            <span class="sym">⚙️</span>
+            <div class="label">REL</div>
+            <div class="desc">Status · RDY/MISS</div>
+        </div>
+        <div class="schalter" data-id="start">
+            <span class="num">09</span>
+            <span class="sym">⚡</span>
+            <div class="label">START</div>
+            <div class="desc">Vollständige Aktivierung</div>
         </div>
     </div>
 
-    <div class="panel">
-        <h2>ANALYSE-TABELLE</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Ebene</th>
-                    <th>Status</th>
-                    <th>Wert</th>
-                </tr>
-            </thead>
-            <tbody id="algoTable"></tbody>
-        </table>
+    <!-- 3-SPALTEN -->
+    <div class="grid-3">
+        <div class="panel">
+            <h2>🌿 Algorithmus · Zustand</h2>
+            <div id="algoOutput">Warte auf Schalter‑Aktivierung…</div>
+        </div>
+        <div class="panel">
+            <h2>📊 Analyse‑Tabelle</h2>
+            <table>
+                <thead><tr><th>Ebene</th><th>Status</th><th>Wert</th></tr></thead>
+                <tbody id="algoTable"></tbody>
+            </table>
+        </div>
+        <div class="panel">
+            <h2>📜 Log · Chronik</h2>
+            <div class="log" id="log">[init] PIPELINE9 · Harmonie erwacht.</div>
+        </div>
     </div>
 
-    <div class="panel">
-        <h2>LOG</h2>
-        <div class="log" id="log">[init] PIPELINE9 Master-Index bereit.</div>
+    <!-- KOHÄRENZ / HERZSCHLAG -->
+    <div class="panel" style="margin-top: 8px;">
+        <h2>❤️ Kohärenz · Herzschlag</h2>
+        <div class="coherence-area">
+            <div class="coherence-heart">
+                <span class="heartbeat">❤️</span>
+                <span class="coherence-value" id="coherenceValue">42.0<small>%</small></span>
+            </div>
+            <div class="coherence-step" id="coherenceStep">Step: 3</div>
+        </div>
     </div>
-</div>
 
-<!-- ZUSAMMENFASSUNG -->
-<div class="panel">
-    <h2>KOHÄRENZ</h2>
-    <div class="summary" id="coherence">–</div>
+    <footer>⚖️ EVO‑GEOLEGAL · iki1uc © · Code nutzbar, Logik unkopierbar.</footer>
 </div>
-
-<footer>⚖️ EVO-GEOLEGAL · iki1uc © · Code nutzbar, Logik unkopierbar.</footer>
 
 <script>
-// ============================================================
-// PIPELINE9 · Master-Index · 9 Schalter
-// ============================================================
+// ================================================================
+// PIPELINE9 · Harmonie · 9 Schalter
+// ================================================================
 
-// 1. Schalter-Definitionen
+// 1. SCHALTER-DEFINITION
 const SCHALTER = [
     { id: "qi",      active: false, value: "QI aktiv" },
     { id: "iqq",     active: false, value: "IQQ aktiv" },
@@ -304,92 +437,95 @@ const SCHALTER = [
     { id: "start",   active: false, value: "START aktiv" }
 ];
 
-// 2. GEN-Flow-Controller
+// 2. GEN-FLOW (Herzschlag)
 const GEN = {
     step: "3",
     coverage: 42,
+    sequence: ["3", "QI", "9", "IQQ", "81", "PIPELINE9", "756", "27", "81.tmp", "3"],
 
-    nextStep(step) {
-        const seq = ["3", "QI", "9", "IQQ", "81", "PIPELINE9", "756", "27", "81.tmp", "3"];
-        const idx = seq.indexOf(step);
-        return seq[(idx + 1) % seq.length];
+    nextStep() {
+        const idx = this.sequence.indexOf(this.step);
+        return this.sequence[(idx + 1) % this.sequence.length];
     },
 
     calcCoverage() {
-        return 42 + Math.sin(Date.now() / 1000) * 5;
+        // sanfte, harmonische Schwingung
+        return 42 + 5 * Math.sin(Date.now() / 1200);
     },
 
     update() {
-        this.step = this.nextStep(this.step);
+        this.step = this.nextStep();
         this.coverage = this.calcCoverage();
-        document.getElementById("coherence").innerHTML = 
-            `🔄 Kohärenz: <b>${this.coverage.toFixed(1)}%</b> · Step: <b>${this.step}</b>`;
+        document.getElementById('coherenceValue').innerHTML = this.coverage.toFixed(1) + '<small>%</small>';
+        document.getElementById('coherenceStep').textContent = 'Step: ' + this.step;
     }
 };
 
-// 3. Log
+// 3. LOG
 function log(msg) {
-    const el = document.getElementById("log");
-    const e = document.createElement("div");
+    const el = document.getElementById('log');
+    const e = document.createElement('div');
     e.textContent = msg;
     el.appendChild(e);
     el.scrollTop = el.scrollHeight;
 }
 
-// 4. Algorithmus-Reaktion
+// 4. ALGORITHMUS-REAKTION
 function runAlgorithm() {
     const activeCount = SCHALTER.filter(s => s.active).length;
-    const output = document.getElementById("algoOutput");
-    const table = document.getElementById("algoTable");
+    const output = document.getElementById('algoOutput');
+    const table = document.getElementById('algoTable');
 
-    // Logik: Je mehr Schalter aktiv, desto tiefer der Algorithmus
+    // Status-Texte mit emotionaler Färbung
+    let statusText = '';
     if (activeCount === 0) {
-        output.innerHTML = "Status: <b>LEER</b><br>Keine Schalter aktiv.";
+        statusText = 'Ruhe · <b>LEER</b><br>Das System wartet auf einen Impuls.';
     } else if (activeCount <= 3) {
-        output.innerHTML = "Status: <b>ALPHA</b><br>Grund-Potenzial erkannt.";
+        statusText = 'Erwachen · <b>ALPHA</b><br>Ein erster Hauch von Struktur.';
     } else if (activeCount <= 6) {
-        output.innerHTML = "Status: <b>BETA</b><br>Struktur im Aufbau.";
+        statusText = 'Fluss · <b>BETA</b><br>Die Form beginnt zu atmen.';
     } else if (activeCount <= 8) {
-        output.innerHTML = "Status: <b>GAMMA</b><br>Struktur fast vollständig.";
+        statusText = 'Fülle · <b>GAMMA</b><br>Fast vollständig – Harmonie naht.';
     } else {
-        output.innerHTML = "Status: <b>∞ AKTIV</b><br>Vollständige 8→9 Bildung.";
+        statusText = 'Vollendung · <b>∞ AKTIV</b><br>Die 8→9-Bildung ist da. Alles ist eins.';
     }
+    output.innerHTML = statusText;
 
     // Tabelle
-    table.innerHTML = "";
+    table.innerHTML = '';
     SCHALTER.forEach(s => {
-        const tr = document.createElement("tr");
+        const tr = document.createElement('tr');
+        const statusClass = s.active ? 'status-active' : 'status-inactive';
         tr.innerHTML = `<td>${s.id.toUpperCase()}</td>
-                        <td style="color:${s.active ? '#6bffa9' : '#555'}">${s.active ? '✅ AKTIV' : '○ INAKTIV'}</td>
+                        <td class="${statusClass}">${s.active ? '● aktiv' : '○ inaktiv'}</td>
                         <td>${s.value}</td>`;
         table.appendChild(tr);
     });
 
-    log(`🌀 Algorithmus: ${activeCount}/9 Schalter aktiv.`);
+    log(`🌀 ${activeCount}/9 Schalter aktiv · ${activeCount === 9 ? '∞ HARMONIE' : 'im Fluss'}`);
 }
 
-// 5. Schalter-Interaktion
+// 5. SCHALTER-INTERAKTION
 document.querySelectorAll('.schalter').forEach(el => {
     el.addEventListener('click', () => {
         const id = el.dataset.id;
         const schalter = SCHALTER.find(s => s.id === id);
+        if (!schalter) return;
 
-        // Toggle
         schalter.active = !schalter.active;
         el.classList.toggle('active', schalter.active);
 
-        // Log
-        log(`⚡ Schalter ${id.toUpperCase()} ${schalter.active ? 'AKTIVIERT' : 'DEAKTIVIERT'}`);
-
-        // Re-Run Algorithmus
+        log(`⚡ ${id.toUpperCase()} ${schalter.active ? 'erwacht' : 'ruht'}`);
         runAlgorithm();
     });
 });
 
-// 6. INIT + GEN-LOOP
-setInterval(() => GEN.update(), 500);
+// 6. GEN-LOOP (Herzschlag aktualisieren)
+setInterval(() => GEN.update(), 400);
+
+// 7. INIT
 runAlgorithm();
-log("🌀 9 Schalter bereit. Klicke, um den Algorithmus zu starten.");
+log('🌿 PIPELINE9 · Harmonie-Modus aktiv. Berühre die Schalter.');
 </script>
 
 </body>
