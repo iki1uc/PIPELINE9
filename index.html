@@ -1,531 +1,570 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="iki1uc (Ridvan)">
-    <meta name="license" content="MIT - Nutzung erlaubt. Logik-Reproduktion verboten.">
-    <title>🌀 PIPELINE9 · Harmonie · 9 Schalter</title>
+<meta charset="UTF-8">
+<title>IKI1UC · v5 · Diamond + NC‑Agent · easy‑going</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+<style>
+    /* ===== BASIS ===== */
+    body { background:#0b0b0b; color:#e0e0e0; font-family:Consolas, monospace; padding:15px; margin:0; }
+    .container { max-width:1100px; margin:0 auto; }
+    h1 { color:#6cf; font-size:1.4rem; margin:0 0 8px 0; }
+    .flex { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:4px 0; }
+    .grid-2 { display:grid; grid-template-columns: 2fr 1fr; gap:15px; }
+    @media (max-width:800px) { .grid-2 { grid-template-columns:1fr; } }
 
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background: #0d0b10;
-            color: #e0d8e8;
-            font-family: 'Inter', 'Consolas', monospace;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background-image: radial-gradient(circle at 20% 30%, rgba(255, 215, 100, 0.05) 0%, transparent 60%);
-        }
+    /* ===== CANVAS ===== */
+    #orbitCanvas { background:#000; border:1px solid #333; display:block; width:100%; height:auto; aspect-ratio:700/300; }
 
-        .container {
-            max-width: 1380px;
-            width: 100%;
-            background: rgba(18, 16, 24, 0.7);
-            backdrop-filter: blur(6px);
-            border-radius: 32px;
-            border: 1px solid rgba(255, 215, 100, 0.15);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-            padding: 32px 36px 40px;
-            transition: all 0.4s ease;
-        }
+    /* ===== PANELS ===== */
+    .panel { background:#111; border:1px solid #2a3a4a; border-radius:8px; padding:10px; margin-bottom:10px; }
+    .panel h2 { color:#8ab0c0; font-size:14px; margin:0 0 8px 0; border-bottom:1px solid #2a3a4a; padding-bottom:4px; }
+    .navi-row { display:flex; justify-content:space-between; font-size:13px; padding:2px 0; }
+    .navi-row .label { color:#5a7a8a; }
+    .navi-row .value { font-weight:bold; }
+    .navi-row .value.green { color:#8cf0d0; }
+    .navi-row .value.orange { color:#f0d080; }
+    .navi-row .value.pink { color:#ff8a9b; }
+    .navi-row .value.purple { color:#b388ff; }
+    .navi-row .value.gold { color:#ffd700; }
 
-        /* HEADER */
-        header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 28px;
-            gap: 16px;
-        }
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #f6b26b, #d4a373);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: #1c181e;
-            box-shadow: 0 0 30px rgba(244, 180, 100, 0.25);
-        }
-        h1 {
-            font-weight: 600;
-            font-size: 26px;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #f6d9b0, #dbbd9a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        h1 span { font-weight: 400; -webkit-text-fill-color: rgba(200, 180, 160, 0.5); font-size: 18px; }
-        .badge {
-            background: rgba(255, 215, 150, 0.08);
-            border: 1px solid rgba(255, 215, 150, 0.15);
-            border-radius: 100px;
-            padding: 6px 18px;
-            font-size: 12px;
-            color: #cbb59e;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .badge .pulse {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #f5b87e;
-            animation: pulse-dot 2.2s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.3); }
-        }
+    /* ===== ATOM-UHR ===== */
+    .atom-clock { background:#0a1a1a; border:1px solid #1a3a3a; border-radius:6px; padding:8px 12px; text-align:center; margin-top:6px; }
+    .atom-clock .time { font-size:28px; color:#6cf; letter-spacing:3px; font-weight:bold; }
+    .atom-clock .sub { font-size:12px; color:#5a7a8a; }
 
-        /* SCHALTER-GRID */
-        .schalter-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            padding: 20px;
-            background: rgba(255, 215, 150, 0.03);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 215, 150, 0.06);
-            margin-bottom: 28px;
-            transition: border-color 0.6s;
-        }
-        .schalter {
-            background: rgba(30, 26, 36, 0.6);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 215, 150, 0.08);
-            border-radius: 20px;
-            padding: 18px 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-            color: #b0a8b8;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .schalter:hover {
-            border-color: rgba(255, 215, 150, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.4);
-        }
-        .schalter.active {
-            border-color: #f5b87e;
-            color: #f5d9b0;
-            background: rgba(245, 184, 126, 0.08);
-            box-shadow: 0 0 30px rgba(245, 184, 126, 0.08), inset 0 0 20px rgba(245, 184, 126, 0.02);
-        }
-        .schalter .num {
-            position: absolute;
-            top: 8px;
-            left: 12px;
-            font-size: 10px;
-            color: rgba(200, 180, 160, 0.25);
-            font-weight: 600;
-        }
-        .schalter .sym {
-            display: block;
-            font-size: 28px;
-            margin-bottom: 6px;
-            transition: transform 0.6s ease;
-        }
-        .schalter.active .sym {
-            transform: scale(1.1) rotate(2deg);
-        }
-        .schalter .label {
-            font-weight: 500;
-            font-size: 14px;
-            letter-spacing: 0.03em;
-        }
-        .schalter .desc {
-            font-size: 10px;
-            color: rgba(200, 180, 160, 0.4);
-            margin-top: 4px;
-        }
+    /* ===== WEGPUNKTE ===== */
+    .waypoint-list { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+    .waypoint-item { background:#1a1a2a; padding:2px 8px; border-radius:12px; font-size:12px; border:1px solid #2a3a4a; }
+    .waypoint-item.active { border-color:#6cf; background:#1a2a3a; color:#6cf; }
 
-        /* 3-Spalten-Layout */
-        .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr 1fr;
-            gap: 20px;
-            margin-bottom: 24px;
-        }
-        @media (max-width: 900px) {
-            .grid-3 { grid-template-columns: 1fr; }
-        }
+    /* ===== SCANNER ===== */
+    #tabScanBox { font-size:12px; max-height:140px; overflow:auto; background:#0a0a12; border-radius:4px; padding:4px; }
+    .tab-row { display:flex; gap:10px; align-items:center; padding:2px 4px; border-bottom:1px solid #1a2226; }
+    .tab-row .tid { color:#6cf; min-width:70px; }
+    .tab-row .trole { min-width:70px; }
+    .tab-row .tfp { color:#5a7a8a; min-width:80px; }
+    .tab-row.mismatch { background:rgba(255,80,80,0.08); }
+    .tab-row.mismatch .tfp { color:#ff6b6b; }
+    .tab-row.agent .trole { color:#ff8a5c; font-weight:bold; }
+    #mismatchLog { font-size:12px; max-height:80px; overflow:auto; margin-top:4px; color:#ff9b9b; }
 
-        .panel {
-            background: rgba(30, 26, 36, 0.4);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 215, 150, 0.06);
-            border-radius: 20px;
-            padding: 18px 20px;
-            transition: all 0.4s;
-        }
-        .panel h2 {
-            font-size: 13px;
-            font-weight: 600;
-            color: #cbb59e;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            border-bottom: 1px solid rgba(255, 215, 150, 0.06);
-            padding-bottom: 10px;
-            margin-bottom: 12px;
-        }
+    /* ===== BUTTONS / BADGES ===== */
+    .btn { padding:5px 14px; background:#222; color:#fff; border:1px solid #555; cursor:pointer; font-family:Consolas, monospace; font-size:13px; border-radius:4px; }
+    .btn:hover { border-color:#6cf; }
+    .btn.active { border-color:#6cf; background:#2a3a4a; }
+    .btn.nc { border-color:#ff8a5c; color:#ff8a5c; }
+    .btn.nc:hover { background:#2a1a0a; }
+    .badge { display:inline-block; padding:2px 12px; border-radius:12px; font-size:11px; border:1px solid #2a3a4a; }
+    .badge.aktiv { border-color:#8cf0d0; color:#8cf0d0; }
+    .badge.pause { border-color:#f0d080; color:#f0d080; }
+    .badge.leader { border-color:#ffd700; color:#ffd700; background:#1a1a0a; }
+    .badge.follower { border-color:#888; color:#888; }
+    .badge.sync { border-color:#8cf0d0; color:#8cf0d0; }
+    .badge.desync { border-color:#ff6b6b; color:#ff6b6b; }
 
-        /* Algorithmus-Status */
-        #algoOutput {
-            font-size: 13px;
-            line-height: 1.8;
-            color: #d8d0d8;
-            padding: 4px 0;
-        }
-        #algoOutput b {
-            color: #f5d9b0;
-            font-weight: 600;
-        }
-
-        /* Tabelle */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-        }
-        th, td {
-            padding: 6px 6px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        th {
-            color: #b0a0a8;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            font-size: 9px;
-        }
-        td:first-child { font-weight: 500; color: #c0b8c0; }
-        .status-active { color: #a8d5a0; }
-        .status-inactive { color: #605860; }
-
-        /* Log */
-        .log {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-size: 10px;
-            height: 120px;
-            overflow-y: auto;
-            line-height: 1.8;
-            color: #908898;
-            border: 1px solid rgba(255, 215, 150, 0.04);
-        }
-        .log::-webkit-scrollbar { width: 3px; }
-        .log::-webkit-scrollbar-thumb { background: #4a404a; border-radius: 4px; }
-
-        /* KOHÄRENZ / HERZSCHLAG */
-        .coherence-area {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 10px 0 4px;
-        }
-        .coherence-heart {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .heartbeat {
-            font-size: 28px;
-            color: #f5b87e;
-            animation: heartbeat 1.8s ease-in-out infinite;
-        }
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            25% { transform: scale(1.2); opacity: 1; }
-            50% { transform: scale(0.95); opacity: 0.8; }
-            75% { transform: scale(1.1); opacity: 1; }
-        }
-        .coherence-value {
-            font-size: 18px;
-            font-weight: 500;
-            color: #e0d0c0;
-            letter-spacing: 0.02em;
-        }
-        .coherence-value small {
-            font-size: 12px;
-            color: #908898;
-            font-weight: 400;
-        }
-        .coherence-step {
-            font-size: 12px;
-            color: #b0a0a0;
-            background: rgba(255, 215, 150, 0.04);
-            padding: 4px 14px;
-            border-radius: 100px;
-            border: 1px solid rgba(255, 215, 150, 0.06);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            color: #403840;
-            font-size: 10px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 215, 150, 0.04);
-            margin-top: 12px;
-            letter-spacing: 0.04em;
-        }
-
-        /* Responsive */
-        @media (max-width: 720px) {
-            .container { padding: 20px 16px; }
-            .schalter-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px; }
-            .schalter { padding: 14px 6px; }
-            .schalter .sym { font-size: 22px; }
-            .schalter .label { font-size: 12px; }
-            .grid-3 { gap: 16px; }
-        }
-        @media (max-width: 480px) {
-            .schalter-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px; }
-            .schalter { padding: 10px 4px; }
-            .schalter .sym { font-size: 18px; }
-            .schalter .label { font-size: 10px; }
-            .schalter .desc { display: none; }
-        }
-    </style>
+    /* ===== LOG ===== */
+    #log { background:#111; padding:10px; height:100px; overflow:auto; font-size:12px; margin-top:8px; border:1px solid #2a3a4a; border-radius:4px; }
+    input[type="range"] { width:100px; background:#222; accent-color:#6cf; }
+    .label { color:#8ab0c0; font-size:12px; }
+    .status { font-size:12px; color:#5a7a8a; }
+</style>
 </head>
 <body>
 
 <div class="container">
 
-    <header>
-        <div class="logo-area">
-            <div class="logo-icon">🌀</div>
-            <h1>PIPELINE9 <span>· Harmonie</span></h1>
-        </div>
-        <div class="badge">
-            <span class="pulse"></span>
-            <span>9 Schalter · lebendig</span>
-        </div>
-    </header>
-
-    <!-- 9 SCHALTER -->
-    <div class="schalter-grid" id="schalterGrid">
-        <div class="schalter" data-id="qi">
-            <span class="num">01</span>
-            <span class="sym">◉</span>
-            <div class="label">QI</div>
-            <div class="desc">Öffnung · 3→9</div>
-        </div>
-        <div class="schalter" data-id="iqq">
-            <span class="num">02</span>
-            <span class="sym">◎</span>
-            <div class="label">IQQ</div>
-            <div class="desc">Schließung · 9→81</div>
-        </div>
-        <div class="schalter" data-id="geo">
-            <span class="num">03</span>
-            <span class="sym">◆</span>
-            <div class="label">GEO</div>
-            <div class="desc">Ursache → Wirkung</div>
-        </div>
-        <div class="schalter" data-id="p9">
-            <span class="num">04</span>
-            <span class="sym">▣</span>
-            <div class="label">P9</div>
-            <div class="desc">Prüfung · 8→9</div>
-        </div>
-        <div class="schalter" data-id="tmp">
-            <span class="num">05</span>
-            <span class="sym">△</span>
-            <div class="label">81.tmp</div>
-            <div class="desc">Tiefenachse</div>
-        </div>
-        <div class="schalter" data-id="vector">
-            <span class="num">06</span>
-            <span class="sym">↺</span>
-            <div class="label">VECTOR</div>
-            <div class="desc">GEO‑MOVE‑Vektor</div>
-        </div>
-        <div class="schalter" data-id="module">
-            <span class="num">07</span>
-            <span class="sym">☀️</span>
-            <div class="label">MODULE</div>
-            <div class="desc">LIVE‑Status</div>
-        </div>
-        <div class="schalter" data-id="rel">
-            <span class="num">08</span>
-            <span class="sym">⚙️</span>
-            <div class="label">REL</div>
-            <div class="desc">Status · RDY/MISS</div>
-        </div>
-        <div class="schalter" data-id="start">
-            <span class="num">09</span>
-            <span class="sym">⚡</span>
-            <div class="label">START</div>
-            <div class="desc">Vollständige Aktivierung</div>
+    <!-- ===== HEADER ===== -->
+    <div class="flex" style="justify-content:space-between;">
+        <h1>💎 IKI1UC · v5 <span style="color:#5a7a8a;font-size:14px;font-weight:300;">Diamond + NC‑Agent · easy‑going</span></h1>
+        <div>
+            <span class="badge" id="roleStatus">LEADER</span>
+            <span class="badge sync" id="syncStatus">● verbunden</span>
+            <span style="color:#6cf;font-size:12px;" id="tabIdLabel">–</span>
         </div>
     </div>
 
-    <!-- 3-SPALTEN -->
-    <div class="grid-3">
-        <div class="panel">
-            <h2>🌿 Algorithmus · Zustand</h2>
-            <div id="algoOutput">Warte auf Schalter‑Aktivierung…</div>
-        </div>
-        <div class="panel">
-            <h2>📊 Analyse‑Tabelle</h2>
-            <table>
-                <thead><tr><th>Ebene</th><th>Status</th><th>Wert</th></tr></thead>
-                <tbody id="algoTable"></tbody>
-            </table>
-        </div>
-        <div class="panel">
-            <h2>📜 Log · Chronik</h2>
-            <div class="log" id="log">[init] PIPELINE9 · Harmonie erwacht.</div>
-        </div>
-    </div>
-
-    <!-- KOHÄRENZ / HERZSCHLAG -->
-    <div class="panel" style="margin-top: 8px;">
-        <h2>❤️ Kohärenz · Herzschlag</h2>
-        <div class="coherence-area">
-            <div class="coherence-heart">
-                <span class="heartbeat">❤️</span>
-                <span class="coherence-value" id="coherenceValue">42.0<small>%</small></span>
+    <!-- ===== CANVAS + NAVI ===== -->
+    <div class="grid-2">
+        <!-- Linke Spalte: Canvas -->
+        <div>
+            <canvas id="orbitCanvas" width="700" height="300"></canvas>
+            <div class="flex" style="justify-content:space-between; font-size:12px; color:#5a7a8a; margin-top:4px;">
+                <span>🌀 Orbit: <span id="orbitStatus" class="badge aktiv">AKTIV</span></span>
+                <span>👑 Rolle: <span id="roleBadge" class="badge leader">LEADER</span></span>
             </div>
-            <div class="coherence-step" id="coherenceStep">Step: 3</div>
+            <!-- Steuerung -->
+            <div class="flex" style="margin-top:6px;">
+                <button class="btn" id="btnPlay">⏸ Pause</button>
+                <button class="btn" id="btnStep">▶ Schritt</button>
+                <button class="btn" id="btnReset">⟲ Reset</button>
+                <span class="label">Speed</span>
+                <input type="range" id="speedSlider" min="1" max="10" value="3">
+                <span class="label" id="speedLabel">3×</span>
+            </div>
+            <!-- Modus-Buttons -->
+            <div class="flex" style="margin-top:4px;">
+                <button class="btn" id="btnModeIQQ">IQQ</button>
+                <button class="btn" id="btnModeOCTA">OCTA</button>
+                <button class="btn" id="btnModeA81">A81</button>
+                <button class="btn nc" id="btnModeNC">🤖 NC</button>
+            </div>
+            <!-- Axiom-Anzeige -->
+            <div class="flex" style="font-size:12px;color:#8ab0c0;gap:14px;margin-top:4px;">
+                <span>IQQ: <span id="axiomIQQ" style="color:#ffd700;">9→3</span></span>
+                <span>OCTA: <span id="axiomOCTA" style="color:#6cf;">◉◆△</span></span>
+                <span>A81: <span id="axiomA81" style="color:#b388ff;">27·81</span></span>
+                <span>🤖 NC: <span id="axiomNC" style="color:#ff8a5c;">0 Moves</span></span>
+            </div>
+        </div>
+
+        <!-- Rechte Spalte: Navigation + Atomuhr + Scanner -->
+        <div>
+            <!-- Navigation -->
+            <div class="panel">
+                <h2>🧭 NAVIGATION</h2>
+                <div class="navi-row"><span class="label">Position (Index)</span><span class="value green" id="naviIndex">0</span></div>
+                <div class="navi-row"><span class="label">Symbol</span><span class="value orange" id="naviSymbol">◉</span></div>
+                <div class="navi-row"><span class="label">Kurs (Heading)</span><span class="value" id="naviHeading">000°</span></div>
+                <div class="navi-row"><span class="label">Geschw. (Knoten)</span><span class="value pink" id="naviSpeed">0.0</span></div>
+                <div class="navi-row"><span class="label">Modus</span><span class="value gold" id="naviMode">IQQ</span></div>
+                <!-- Atomuhr -->
+                <div class="atom-clock">
+                    <div class="time" id="atomTime">00:00:00.000</div>
+                    <div class="sub">⚛️ Takt <span id="atomTick">0</span> · Δt <span id="atomDelta">0.0</span>ms</div>
+                </div>
+                <!-- Wegpunkte -->
+                <div style="margin-top:6px;">
+                    <div style="font-size:11px; color:#5a7a8a;">📍 Wegpunkte:</div>
+                    <div class="waypoint-list" id="waypointList"></div>
+                </div>
+            </div>
+
+            <!-- Scanner -->
+            <div class="panel">
+                <h2>🔍 ROLLEN‑ &amp; CODE‑SCANNER</h2>
+                <div id="tabScanBox">⏳ Warte auf andere Tabs …</div>
+                <div id="mismatchLog"></div>
+            </div>
         </div>
     </div>
 
-    <footer>⚖️ EVO‑GEOLEGAL · iki1uc © · Code nutzbar, Logik unkopierbar.</footer>
+    <!-- LOG -->
+    <div id="log">💎 v5 · Diamond + NC‑Agent · easy‑going — gestartet</div>
+
 </div>
 
 <script>
-// ================================================================
-// PIPELINE9 · Harmonie · 9 Schalter
-// ================================================================
+"use strict";
+/* ================================================================
+   IKI1UC · v5 (Diamond + NC‑Agent) — easy‑going
+   Enthält: Orbit, Atomuhr, Navigation, Leader‑Election (Tie‑Break),
+   Code‑Fingerprint, Mismatch‑Scanner (fix), NC‑Agent.
+   ================================================================ */
 
-// 1. SCHALTER-DEFINITION
-const SCHALTER = [
-    { id: "qi",      active: false, value: "QI aktiv" },
-    { id: "iqq",     active: false, value: "IQQ aktiv" },
-    { id: "geo",     active: false, value: "GEO aktiv" },
-    { id: "p9",      active: false, value: "P9 aktiv" },
-    { id: "tmp",     active: false, value: "81.tmp aktiv" },
-    { id: "vector",  active: false, value: "VECTOR aktiv" },
-    { id: "module",  active: false, value: "MODULE aktiv" },
-    { id: "rel",     active: false, value: "REL aktiv" },
-    { id: "start",   active: false, value: "START aktiv" }
-];
+  // ─── KONFIGURATION ──────────────────────────────────────────────
+  const ORBIT = [
+    "◉","↗","↘","3","9","↘","↗","◎","↗","↘","3","9","↘","↗",
+    "◎","↗","↘","81","◆","↘","↗","△","↗","↘","27","▣","↘","↗","3","↺"
+  ];
 
-// 2. GEN-FLOW (Herzschlag)
-const GEN = {
-    step: "3",
-    coverage: 42,
-    sequence: ["3", "QI", "9", "IQQ", "81", "PIPELINE9", "756", "27", "81.tmp", "3"],
+  const AXIOM_MAP = {
+    '3':'IQQ','9':'IQQ',
+    '◎':'OCTA','◉':'OCTA','◆':'OCTA','△':'OCTA','▣':'OCTA','↺':'OCTA',
+    '81':'A81','27':'A81','243':'A81','729':'A81'
+  };
 
-    nextStep() {
-        const idx = this.sequence.indexOf(this.step);
-        return this.sequence[(idx + 1) % this.sequence.length];
-    },
+  const PATH_BASE = 5;
+  const STEP_BASE = 800, STEP_FACTOR = 60, STEP_MIN = 100;
 
-    calcCoverage() {
-        // sanfte, harmonische Schwingung
-        return 42 + 5 * Math.sin(Date.now() / 1200);
-    },
+  const LEADER_KEY = 'iki1uc-orbit-leader';
+  const LEADER_TIMEOUT = 2000;
+  const HEARTBEAT_EVERY = 500;
+  const CLAIM_JITTER_MAX = 120;
 
-    update() {
-        this.step = this.nextStep();
-        this.coverage = this.calcCoverage();
-        document.getElementById('coherenceValue').innerHTML = this.coverage.toFixed(1) + '<small>%</small>';
-        document.getElementById('coherenceStep').textContent = 'Step: ' + this.step;
+  // ─── STATE ──────────────────────────────────────────────────────
+  const state = {
+    index: 0, running: true, speed: 3, mode: 'IQQ',
+    history: [], axiomCount: { IQQ:0, OCTA:0, A81:0, NC:0 },
+    isLeader: false, accumulator: 0, lastFrame: null,
+    tabId: Math.random().toString(36).slice(2, 8).toUpperCase(),
+    knownTabs: new Map(),
+    atomTick: 0, atomDelta: 0
+  };
+
+  document.getElementById('tabIdLabel').textContent = state.tabId;
+
+  // ─── FINGERPRINT ──────────────────────────────────────────────
+  function computeFingerprint() {
+    const parts = [
+      'v5',
+      ORBIT.length, PATH_BASE,
+      LEADER_TIMEOUT, HEARTBEAT_EVERY,
+      STEP_BASE, STEP_FACTOR, STEP_MIN,
+      JSON.stringify(AXIOM_MAP)
+    ].join('|');
+    let hash = 5381;
+    for (let i=0; i<parts.length; i++) {
+      hash = ((hash*33) ^ parts.charCodeAt(i)) >>> 0;
     }
-};
+    return hash.toString(16);
+  }
+  const ownFingerprint = computeFingerprint();
 
-// 3. LOG
-function log(msg) {
-    const el = document.getElementById('log');
-    const e = document.createElement('div');
-    e.textContent = msg;
-    el.appendChild(e);
-    el.scrollTop = el.scrollHeight;
-}
+  // ─── LEADER-ELECTION ──────────────────────────────────────────
+  function readLeader() {
+    try { const raw = localStorage.getItem(LEADER_KEY); return raw ? JSON.parse(raw) : null; } catch(_){return null;}
+  }
+  function writeLeader() {
+    localStorage.setItem(LEADER_KEY, JSON.stringify({ id: state.tabId, ts: Date.now() }));
+  }
+  function tryClaimLeadership() {
+    const now = Date.now();
+    const entry = readLeader();
+    if (state.isLeader) {
+      if (entry && entry.id !== state.tabId) {
+        state.isLeader = false; updateRoleBadge();
+        log(`⚠️ Leader‑Konflikt → zurück (Tab ${entry.id})`);
+        return;
+      }
+      writeLeader(); return;
+    }
+    if (!entry || now - entry.ts > LEADER_TIMEOUT) {
+      writeLeader();
+      const jitter = Math.floor(Math.random() * CLAIM_JITTER_MAX);
+      setTimeout(() => {
+        const check = readLeader();
+        if (check && check.id === state.tabId) {
+          state.isLeader = true; updateRoleBadge();
+          log('👑 Leader übernommen');
+        }
+      }, jitter);
+    }
+  }
+  function updateRoleBadge() {
+    const el = document.getElementById('roleStatus');
+    el.textContent = state.isLeader ? 'LEADER' : 'FOLLOWER';
+    el.className = 'badge ' + (state.isLeader ? 'leader' : 'follower');
+    document.getElementById('roleBadge').textContent = state.isLeader ? 'LEADER' : 'FOLLOWER';
+    document.getElementById('roleBadge').className = 'badge ' + (state.isLeader ? 'leader' : 'follower');
+  }
+  setInterval(tryClaimLeadership, HEARTBEAT_EVERY);
+  tryClaimLeadership();
 
-// 4. ALGORITHMUS-REAKTION
-function runAlgorithm() {
-    const activeCount = SCHALTER.filter(s => s.active).length;
-    const output = document.getElementById('algoOutput');
-    const table = document.getElementById('algoTable');
+  // ─── BROADCASTCHANNEL ──────────────────────────────────────────
+  let bc = null;
+  try {
+    bc = new BroadcastChannel('iki1uc-orbit');
+    bc.onmessage = (e) => {
+      const data = e.data;
+      if (!data) return;
+      if (data.type === 'orbit.step' && !state.isLeader) {
+        state.index = data.index;
+        state.history.push(data.index);
+        if (state.history.length > 10) state.history.shift();
+        document.getElementById('syncStatus').textContent = '● synchronisiert';
+        document.getElementById('syncStatus').className = 'badge sync';
+        log(`📡 Sync‑Schritt: ${data.symbol}`);
+        updateUI();
+      }
+      if (data.type === 'orbit.reset' && !state.isLeader) {
+        state.index = 0; state.history = []; log('📡 Sync‑Reset'); updateUI();
+      }
+      if (data.type === 'orbit.mode' && !state.isLeader) {
+        state.mode = data.mode; applyModeButtons(data.mode); updateUI();
+      }
+      if (data.type === 'presence') handlePresence(data);
+      if (data.type === 'nc.move' && !state.isLeader) {
+        log(`📡 NC‑Move empfangen (Schritt #${data.index})`);
+      }
+    };
+    setTimeout(() => {
+      document.getElementById('syncStatus').textContent = '● verbunden';
+      document.getElementById('syncStatus').className = 'badge sync';
+    }, 500);
+  } catch (_) {
+    document.getElementById('syncStatus').textContent = '○ kein BC';
+    document.getElementById('syncStatus').className = 'badge desync';
+  }
+  function broadcast(msg) { if(bc) try{bc.postMessage(msg);}catch(_){} }
 
-    // Status-Texte mit emotionaler Färbung
-    let statusText = '';
-    if (activeCount === 0) {
-        statusText = 'Ruhe · <b>LEER</b><br>Das System wartet auf einen Impuls.';
-    } else if (activeCount <= 3) {
-        statusText = 'Erwachen · <b>ALPHA</b><br>Ein erster Hauch von Struktur.';
-    } else if (activeCount <= 6) {
-        statusText = 'Fluss · <b>BETA</b><br>Die Form beginnt zu atmen.';
-    } else if (activeCount <= 8) {
-        statusText = 'Fülle · <b>GAMMA</b><br>Fast vollständig – Harmonie naht.';
+  // ─── PRESENCE / SCANNER ──────────────────────────────────────
+  function broadcastPresence() {
+    broadcast({ type:'presence', tabId:state.tabId, role:state.isLeader?'LEADER':'FOLLOWER', fingerprint:ownFingerprint, ts:Date.now() });
+    if (state.mode === 'NC' && state.isLeader) {
+      broadcast({ type:'presence', tabId:'NC-AGENT', role:'AGENT', fingerprint:'nc-agent-1', ts:Date.now() });
+    }
+  }
+
+  function handlePresence(data) {
+    const prev = state.knownTabs.get(data.tabId);
+    const mismatch = data.role !== 'AGENT' && data.fingerprint !== ownFingerprint;
+
+    // FIX: Mismatch beim ersten Auftreten loggen
+    if ((!prev || !prev.mismatch) && mismatch) {
+      pushMismatchLog(`⚠️ Code‑Mismatch → Tab ${data.tabId} (FP ${data.fingerprint} ≠ ${ownFingerprint})`);
+    }
+    if (prev && prev.role !== data.role) {
+      pushMismatchLog(`🔍 Rollenwechsel → Tab ${data.tabId}: ${prev.role} → ${data.role}`);
+    }
+    if (data.role === 'LEADER' && state.isLeader && data.tabId !== state.tabId) {
+      pushMismatchLog(`⚠️ Zwei Leader: ${state.tabId} und ${data.tabId}`);
+    }
+
+    state.knownTabs.set(data.tabId, {
+      role: data.role, fingerprint: data.fingerprint,
+      lastSeen: Date.now(), mismatch
+    });
+    renderScanner();
+  }
+
+  function pushMismatchLog(msg) {
+    log(msg);
+    const box = document.getElementById('mismatchLog');
+    const line = document.createElement('div');
+    line.textContent = msg;
+    box.appendChild(line);
+    while(box.children.length > 30) box.removeChild(box.firstChild);
+  }
+
+  function renderScanner() {
+    const box = document.getElementById('tabScanBox');
+    const staleAfter = HEARTBEAT_EVERY * 6;
+    const now = Date.now();
+    for (const [id, info] of state.knownTabs) {
+      if (now - info.lastSeen > staleAfter) state.knownTabs.delete(id);
+    }
+    if (state.knownTabs.size === 0) { box.textContent = 'Noch keine anderen Tabs …'; return; }
+    box.innerHTML = '';
+    const self = document.createElement('div');
+    self.className = 'tab-row';
+    self.innerHTML = `<span class="tid">${state.tabId} (ich)</span><span class="trole">${state.isLeader?'LEADER':'FOLLOWER'}</span><span class="tfp">FP ${ownFingerprint}</span>`;
+    box.appendChild(self);
+    for (const [id, info] of state.knownTabs) {
+      const row = document.createElement('div');
+      row.className = 'tab-row' + (info.mismatch?' mismatch':'') + (info.role==='AGENT'?' agent':'');
+      row.innerHTML = `<span class="tid">${id}</span><span class="trole">${info.role}</span><span class="tfp">FP ${info.fingerprint}${info.mismatch?' ⚠️':''}</span>`;
+      box.appendChild(row);
+    }
+  }
+
+  setInterval(broadcastPresence, HEARTBEAT_EVERY);
+  setInterval(renderScanner, 1000);
+
+  // ─── NC‑AGENT ──────────────────────────────────────────────────
+  function ncMove() {
+    state.axiomCount.NC = (state.axiomCount.NC || 0) + 1;
+    document.getElementById('axiomNC').textContent = state.axiomCount.NC + ' Moves';
+    log('🤖 NC‑Agent bewegt sich');
+    broadcast({ type:'nc.move', index:state.index, ts:Date.now() });
+  }
+
+  // ─── UI-UPDATES ────────────────────────────────────────────────
+  function updateUI() {
+    const sym = ORBIT[state.index] || '?';
+    const axiom = state.mode === 'NC' ? 'NC' : (AXIOM_MAP[sym] || '—');
+    document.getElementById('naviIndex').textContent = state.index;
+    document.getElementById('naviSymbol').textContent = sym;
+    document.getElementById('naviHeading').textContent = String(state.index * 12).padStart(3,'0') + '°';
+    document.getElementById('naviSpeed').textContent = (state.speed * 0.7 + state.index * 0.02).toFixed(1);
+    document.getElementById('naviMode').textContent = state.mode;
+    document.getElementById('axiomIQQ').textContent = state.mode === 'IQQ' ? '● aktiv' : '9→3';
+    document.getElementById('axiomOCTA').textContent = state.mode === 'OCTA' ? '● aktiv' : '◉◆△';
+    document.getElementById('axiomA81').textContent = state.mode === 'A81' ? '● aktiv' : '27·81';
+    if (state.mode !== 'NC') {
+      document.getElementById('axiomNC').textContent = (state.axiomCount.NC || 0) + ' Moves';
+    }
+    renderWaypoints();
+    const orbitStatus = document.getElementById('orbitStatus');
+    orbitStatus.textContent = state.running ? 'AKTIV' : 'PAUSE';
+    orbitStatus.className = 'badge ' + (state.running ? 'aktiv' : 'pause');
+  }
+
+  function renderWaypoints() {
+    const container = document.getElementById('waypointList');
+    container.innerHTML = '';
+    for (let i = 0; i < 8; i++) {
+      const idx = (state.index + i) % ORBIT.length;
+      const sym = ORBIT[idx];
+      const span = document.createElement('span');
+      span.className = 'waypoint-item' + (i === 0 ? ' active' : '');
+      span.textContent = sym;
+      container.appendChild(span);
+    }
+  }
+
+  function applyModeButtons(mode) {
+    document.querySelectorAll('[id^="btnMode"]').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('btnMode' + mode);
+    if (btn) btn.classList.add('active');
+  }
+
+  // ─── CANVAS ────────────────────────────────────────────────────
+  const canvas = document.getElementById('orbitCanvas');
+  const ctx = canvas.getContext('2d');
+  function drawOrbit() {
+    const w=canvas.width, h=canvas.height;
+    ctx.shadowBlur=0; ctx.fillStyle='#000'; ctx.fillRect(0,0,w,h);
+    const history = state.history.slice(-5);
+    history.forEach((idx,i) => {
+      const alpha = 0.1 + (i/PATH_BASE)*0.3;
+      const x = 80 + (w-160)*(i/(PATH_BASE-1));
+      const y = h-30;
+      ctx.fillStyle=`rgba(108,204,255,${alpha})`;
+      ctx.font='16px Consolas'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+      ctx.fillText(ORBIT[idx]||'?', x, y);
+      if(i>0) {
+        ctx.strokeStyle=`rgba(108,204,255,${alpha*0.3})`;
+        ctx.lineWidth=1;
+        const prevX = 80 + (w-160)*((i-1)/(PATH_BASE-1));
+        ctx.beginPath(); ctx.moveTo(prevX,y); ctx.lineTo(x,y); ctx.stroke();
+      }
+    });
+    const symbol = ORBIT[state.index]||'?';
+    ctx.fillStyle='#6cf'; ctx.font='60px Consolas'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='#6cf'; ctx.shadowBlur=20;
+    ctx.fillText(symbol, w/2, h/2-20);
+    ctx.shadowBlur=0;
+    const axiom = state.mode === 'NC' ? 'NC' : (AXIOM_MAP[symbol]||'—');
+    ctx.fillStyle='#5a7a8a'; ctx.font='14px Consolas'; ctx.textAlign='center'; ctx.textBaseline='top';
+    ctx.fillText(`#${state.index} · ${axiom}`, w/2, h/2+40);
+    ctx.fillStyle='#3a4a5a'; ctx.font='11px Consolas'; ctx.textAlign='left'; ctx.textBaseline='bottom';
+    ctx.fillText(`⏩ ${state.speed}× · ${state.mode} · Tab ${state.tabId}`, 12, h-6);
+    ctx.textAlign='right';
+    ctx.fillText(`${state.index+1}/${ORBIT.length}`, w-12, h-6);
+  }
+
+  // ─── ORBIT-STEP ────────────────────────────────────────────────
+  function stepOrbit() {
+    const next = (state.index+1) % ORBIT.length;
+    state.index = next;
+    state.history.push(next);
+    if(state.history.length>10) state.history.shift();
+    state.atomTick = (state.atomTick||0)+1;
+
+    const sym = ORBIT[next];
+    if (state.mode === 'NC') {
+      ncMove();
     } else {
-        statusText = 'Vollendung · <b>∞ AKTIV</b><br>Die 8→9-Bildung ist da. Alles ist eins.';
+      const axiom = AXIOM_MAP[sym] || null;
+      if (axiom && state.mode === axiom) {
+        state.axiomCount[axiom] = (state.axiomCount[axiom]||0) + 1;
+      }
     }
-    output.innerHTML = statusText;
+    log(`Orbit‑Schritt → ${sym} (${state.mode === 'NC' ? 'NC' : (AXIOM_MAP[sym]||'—')})`);
+    broadcast({ type:'orbit.step', index:state.index, symbol:sym });
+    updateUI();
+  }
 
-    // Tabelle
-    table.innerHTML = '';
-    SCHALTER.forEach(s => {
-        const tr = document.createElement('tr');
-        const statusClass = s.active ? 'status-active' : 'status-inactive';
-        tr.innerHTML = `<td>${s.id.toUpperCase()}</td>
-                        <td class="${statusClass}">${s.active ? '● aktiv' : '○ inaktiv'}</td>
-                        <td>${s.value}</td>`;
-        table.appendChild(tr);
-    });
+  // ─── ATOM-UHR ──────────────────────────────────────────────────
+  function updateAtomClock(now) {
+    const time = new Date(now);
+    const timeStr = time.toTimeString().slice(0,8) + '.' + String(time.getMilliseconds()).padStart(3,'0');
+    document.getElementById('atomTime').textContent = timeStr;
+    document.getElementById('atomTick').textContent = state.atomTick||0;
+    document.getElementById('atomDelta').textContent = (state.atomDelta||0).toFixed(1);
+  }
 
-    log(`🌀 ${activeCount}/9 Schalter aktiv · ${activeCount === 9 ? '∞ HARMONIE' : 'im Fluss'}`);
-}
+  // ─── HAUPT-LOOP ────────────────────────────────────────────────
+  function loop(now) {
+    if(state.lastFrame===null) state.lastFrame = now;
+    const delta = now - state.lastFrame;
+    state.lastFrame = now;
+    state.atomDelta = delta;
 
-// 5. SCHALTER-INTERAKTION
-document.querySelectorAll('.schalter').forEach(el => {
-    el.addEventListener('click', () => {
-        const id = el.dataset.id;
-        const schalter = SCHALTER.find(s => s.id === id);
-        if (!schalter) return;
+    if(state.running && state.isLeader) {
+      state.accumulator += delta;
+      const stepTime = Math.max(STEP_MIN, STEP_BASE - state.speed*STEP_FACTOR);
+      let guard=0;
+      while(state.accumulator >= stepTime && guard<20) {
+        stepOrbit();
+        state.accumulator -= stepTime;
+        guard++;
+      }
+    } else { state.accumulator = 0; }
 
-        schalter.active = !schalter.active;
-        el.classList.toggle('active', schalter.active);
+    drawOrbit();
+    updateAtomClock(now);
+    requestAnimationFrame(loop);
+  }
 
-        log(`⚡ ${id.toUpperCase()} ${schalter.active ? 'erwacht' : 'ruht'}`);
-        runAlgorithm();
-    });
-});
+  // ─── UI-FUNKTIONEN ─────────────────────────────────────────────
+  function togglePlay() {
+    state.running = !state.running;
+    document.getElementById('btnPlay').textContent = state.running ? '⏸ Pause' : '▶ Start';
+    updateUI();
+  }
+  function resetOrbit() {
+    if(!state.isLeader) { log('⟲ Reset nur Leader'); return; }
+    state.index=0; state.history=[]; state.axiomCount={IQQ:0,OCTA:0,A81:0,NC:0};
+    state.accumulator=0; state.atomTick=0;
+    document.getElementById('axiomNC').textContent = '0 Moves';
+    log('⟲ Reset');
+    broadcast({ type:'orbit.reset' });
+    updateUI();
+  }
+  function setMode(mode) {
+    state.mode = mode;
+    applyModeButtons(mode);
+    log(`🌀 Modus: ${mode}`);
+    broadcast({ type:'orbit.mode', mode });
+    updateUI();
+  }
 
-// 6. GEN-LOOP (Herzschlag aktualisieren)
-setInterval(() => GEN.update(), 400);
+  // ─── LOG ────────────────────────────────────────────────────────
+  function log(msg) {
+    const logBox = document.getElementById('log');
+    const time = new Date().toLocaleTimeString();
+    const line = document.createElement('div');
+    line.textContent = `[${time}] ${msg}`;
+    logBox.appendChild(line);
+    while(logBox.children.length > 60) logBox.removeChild(logBox.firstChild);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
 
-// 7. INIT
-runAlgorithm();
-log('🌿 PIPELINE9 · Harmonie-Modus aktiv. Berühre die Schalter.');
+  // ─── EVENTS ────────────────────────────────────────────────────
+  document.getElementById('btnPlay').addEventListener('click', togglePlay);
+  document.getElementById('btnStep').addEventListener('click', ()=>{ if(state.isLeader) stepOrbit(); else log('⏭ Schritt nur Leader'); });
+  document.getElementById('btnReset').addEventListener('click', resetOrbit);
+  document.getElementById('btnModeIQQ').addEventListener('click', ()=>setMode('IQQ'));
+  document.getElementById('btnModeOCTA').addEventListener('click', ()=>setMode('OCTA'));
+  document.getElementById('btnModeA81').addEventListener('click', ()=>setMode('A81'));
+  document.getElementById('btnModeNC').addEventListener('click', ()=>setMode('NC'));
+
+  const speedSlider = document.getElementById('speedSlider');
+  const speedLabel = document.getElementById('speedLabel');
+  speedSlider.addEventListener('input', ()=>{
+    state.speed = parseInt(speedSlider.value,10);
+    speedLabel.textContent = state.speed + '×';
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key===' ') { e.preventDefault(); togglePlay(); }
+    if(e.key==='ArrowRight' && state.isLeader) stepOrbit();
+    if(e.key==='r'||e.key==='R') resetOrbit();
+    if(e.key==='1') setMode('IQQ');
+    if(e.key==='2') setMode('OCTA');
+    if(e.key==='3') setMode('A81');
+    if(e.key==='4') setMode('NC');
+  });
+
+  // ─── INIT ──────────────────────────────────────────────────────
+  function init() {
+    state.history.push(0);
+    updateUI();
+    updateRoleBadge();
+    applyModeButtons('IQQ');
+    broadcastPresence();
+    log('💎 v5 · Diamond + NC‑Agent · easy‑going');
+    log(`🆔 Tab ${state.tabId} · FP ${ownFingerprint}`);
+    log('⌨️  Leertaste=Pause  →=Schritt  r=Reset  1/2/3/4=Modus');
+    log('🤖 NC‑Agent: im NC‑Modus zählt jeder Schritt als Move');
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('error', (e)=>log('⚠️ Fehler: '+e.message), true);
+  setInterval(updateRoleBadge, HEARTBEAT_EVERY);
+  init();
 </script>
 
 </body>
